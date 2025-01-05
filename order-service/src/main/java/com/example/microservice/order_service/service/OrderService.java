@@ -2,6 +2,7 @@ package com.example.microservice.order_service.service;
 
 import com.example.microservice.order_service.DTO.OrderRequest;
 import com.example.microservice.order_service.DTO.OrderResponse;
+import com.example.microservice.order_service.client.InventoryClient;
 import com.example.microservice.order_service.model.Order;
 import com.example.microservice.order_service.repo.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -18,6 +19,10 @@ import java.util.UUID;
 public class OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
+    private final InventoryClient inventoryClient;
+
+
+
     public List<OrderResponse> findAll() {
         return orderRepository.findAll()
                 .stream()
@@ -27,18 +32,25 @@ public class OrderService {
     };
     @Transactional
     public OrderResponse createOrder(OrderRequest orderRequest) {
-        try{
-            Order order = Order.builder()
-                    .skuCode(orderRequest.skuCode())
-                    .price(orderRequest.price())
-                    .quantity(orderRequest.quantity())
-                    .build();
-            orderRepository.save(order);
-            log.info("Order created: {}", order);
-            return new OrderResponse(order.getId(),order.getOrderNumber(),order.getSkuCode(),order.getPrice(),order.getQuantity());
-        }
-        catch(Exception e){
-            throw new RuntimeException("Error saving order: " + e.getMessage(), e);
-        }
+      var inStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
+       if(inStock){
+           try{
+               Order order = Order.builder()
+                       .skuCode(orderRequest.skuCode())
+                       .price(orderRequest.price())
+                       .quantity(orderRequest.quantity())
+                       .build();
+               orderRepository.save(order);
+               log.info("Order created: {}", order);
+               return new OrderResponse(order.getId(),order.getOrderNumber(),order.getSkuCode(),order.getPrice(),order.getQuantity());
+           }
+           catch(Exception e){
+               throw new RuntimeException("Error saving order: " + e.getMessage(), e);
+           }
+       }
+       else {
+           throw new RuntimeException("Product not in stock with SkuCode: " + orderRequest.skuCode());
+       }
+
     }
 }
