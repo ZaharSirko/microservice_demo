@@ -43,7 +43,7 @@ public class Routes {
     @Bean
     public RouterFunction<ServerResponse> orderServiceRoute() {
         return route("order_service")
-                .route(RequestPredicates.path("/orders/add"), HandlerFunctions.http("http://localhost:8081"))
+                .route(RequestPredicates.path("/orders"), HandlerFunctions.http("http://localhost:8081"))
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker(
                         "orderServiceCircuitBreaker",
                         URI.create("forward:/fallbackRoute")))

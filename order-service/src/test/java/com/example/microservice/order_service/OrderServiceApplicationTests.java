@@ -48,7 +48,7 @@ class OrderServiceApplicationTests {
 
 		InventoryClientStub.stubInventoryCall("phone_14",100);
 
-		var resposeBodyStirng = RestAssured.given()
+		var responseBodyString = RestAssured.given()
 				.contentType("application/json")
 				.body(submitOrderJSON)
 				.when()
@@ -56,11 +56,10 @@ class OrderServiceApplicationTests {
 				.then()
 				.log().all()
 				.statusCode(201)
-				.body("id", Matchers.notNullValue())
-				.body("orderNumber", Matchers.notNullValue())
-				.body("skuCode", Matchers.equalTo("phone_14"))
-				.body("price", Matchers.equalTo(100))
-				.body("quantity", Matchers.equalTo(100));
+				.extract()
+				.body().asString();
+
+		assertThat(responseBodyString, Matchers.is("Order Placed Successfully"));
 
 	}
 }

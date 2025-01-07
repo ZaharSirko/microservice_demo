@@ -14,13 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    private static  final String FIND_ALL = "/orders";
-    private  static final String ADD_ORDER = "/orders/add";
+    private  static final String PLACE_ORDER = "/orders";
 
-    @PostMapping(ADD_ORDER)
-    public ResponseEntity<OrderResponse> addOrder(@RequestBody OrderRequest order) {
-        var createdOrder = orderService.createOrder(order);
-        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+    @PostMapping(PLACE_ORDER)
+    public ResponseEntity<String> placeOrder(@RequestBody OrderRequest order) {
+        orderService.createOrder(order);
+        return new ResponseEntity<>("Order Placed Successfully", HttpStatus.CREATED);
 
     }
 }
