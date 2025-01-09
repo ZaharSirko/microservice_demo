@@ -26,6 +26,9 @@ public class Product {
      String name;
 
     @NonNull
+    String skuCode;
+
+    @NonNull
      String description;
 
     @NonNull
