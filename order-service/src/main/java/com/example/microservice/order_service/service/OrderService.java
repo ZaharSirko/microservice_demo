@@ -47,15 +47,14 @@ public class OrderService {
                orderRepository.save(order);
                log.info("Order created: {}", order);
 
-//               var orderPlacedEvent = new OrderPlacedEvent(order.getOrderNumber(),
-//                       orderRequest
-//                       .userDetails().email(),
-//                       orderRequest.userDetails().firstName(),
-//                       orderRequest.userDetails().lastName());
-//
-//               log.info("Start- Sending OrderPlacedEvent {} to Kafka Topic", orderPlacedEvent);
-//               kafkaTemplate.send("order-placed", orderPlacedEvent);
-//               log.info("End- Sending OrderPlacedEvent {} to Kafka Topic", orderPlacedEvent);
+               var orderPlacedEvent = new OrderPlacedEvent();
+               orderPlacedEvent.setOrderNumber(order.getOrderNumber());
+               orderPlacedEvent.setEmail( orderRequest.userDetails().email());
+               orderPlacedEvent.setName(orderRequest.userDetails().name());
+
+               log.info("Start- Sending OrderPlacedEvent {} to Kafka Topic", orderPlacedEvent);
+               kafkaTemplate.send("order-placed", orderPlacedEvent);
+               log.info("End- Sending OrderPlacedEvent {} to Kafka Topic", orderPlacedEvent);
 
            }
            catch(Exception e){

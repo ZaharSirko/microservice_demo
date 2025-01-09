@@ -52,7 +52,7 @@ class OrderServiceApplicationTests {
 				.contentType("application/json")
 				.body(submitOrderJSON)
 				.when()
-				.post("/orders/add")
+				.post("/orders")
 				.then()
 				.log().all()
 				.statusCode(201)

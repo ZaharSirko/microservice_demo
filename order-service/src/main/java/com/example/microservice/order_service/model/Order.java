@@ -3,8 +3,6 @@ package com.example.microservice.order_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.boot.autoconfigure.web.WebProperties;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;

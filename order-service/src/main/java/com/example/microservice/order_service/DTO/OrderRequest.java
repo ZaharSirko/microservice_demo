@@ -7,5 +7,5 @@ import java.math.BigDecimal;
 
 public record OrderRequest(String skuCode, BigDecimal price,
                            Integer quantity,UserDetails userDetails) implements Serializable {
-    public record UserDetails(String email, String firstName, String lastName) {}
+    public record UserDetails(String email, String name) {}
 }
